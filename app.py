@@ -17,7 +17,7 @@ def detect_country():
     ip_address = get_ip_address()  # You can use a different IP address here
 
     # Look up the country for the IP address
-    with geoip2.webservice.Client(environ['ACCOUNT_ID'], environ['LICENSE_KEY'], host='geolite.info') as client:
+    with geoip2.webservice.Client(environ['MAXMIND_ACCOUNT_ID'], environ['MAXMIND_LICENSE_KEY'], host='geolite.info') as client:
         response = client.city(ip_address)
         return response.country.iso_code
 
