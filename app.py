@@ -1,10 +1,27 @@
+import geoip2.webservice
 from justwatch import JustWatch
+from os import environ
+import requests
 from threading import Timer
 import tkinter as tk
 
 from providers import PROVIDERS
 
-just_watch = JustWatch(country='CA')
+def get_ip_address():
+    response = requests.get('https://httpbin.org/ip')
+    data = response.json()
+    return data['origin']
+
+def detect_country():
+    # Get the user's IP address
+    ip_address = get_ip_address()  # You can use a different IP address here
+
+    # Look up the country for the IP address
+    with geoip2.webservice.Client(environ['ACCOUNT_ID'], environ['LICENSE_KEY'], host='geolite.info') as client:
+        response = client.city(ip_address)
+        return response.country.iso_code
+
+just_watch = JustWatch(country=detect_country())
 
 # Make a request to the API and return the results
 def search_api(query):
